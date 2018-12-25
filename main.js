@@ -1,39 +1,27 @@
-var data = document.getElementById('data');
-var text;
+var c = document.getElementById('canvas'),
+  ctx = c.getContext('2d'),
+  hue = 0,
+  options = {
+    delay: 1000 / 60,
+    saturation: 80,
+    luminosity: 80
+  },
+  gui = new dat.GUI();
 
-//GUIパラメータの準備
-var sampleText = function () {
-  this.message = "dat.guiのサンプル";
-  this.color = "#ff0000";
-  this.fontSize = 24;
-  this.border = false;
-  this.fontFamily = "sans-serif";
-};
+gui.close();
+gui.add(options, 'delay', 10, 100);
+gui.add(options, 'saturation', 0, 100);
+gui.add(options, 'luminosity', 0, 100);
 
-//GUI表示
-window.onload = function () {
-  text = new sampleText();
-  setValue();
-  var gui = new dat.GUI();
-  gui.add(text, 'message').onChange(setValue);
-  gui.addColor(text, 'color').onChange(setValue);
-  gui.add(text, 'fontSize', 6, 48).onChange(setValue);
-  gui.add(text, 'border').onChange(setValue);
-  gui.add(text, 'fontFamily', ["sans-serif", "serif", "cursive", "ＭＳ 明朝", "monospace"]).onChange(setValue);
-};
-
-//設定更新処理
-function setValue() {
-  data.innerHTML = text.message;
-  data.style.color = text.color;
-  data.style.fontSize = text.fontSize + "px";
-  data.style.fontFamily = text.fontFamily;
-  if (text.border) {
-    data.style.border = "solid 1px black";
-    data.style.padding = "10px";
-  }
-  else {
-    data.style.border = "none";
-    data.style.padding = "0px";
-  }
+function draw() {
+  ctx.fillStyle = 'hsl(' +
+    (hue++) +
+    ',' +
+    options.saturation +
+    '%,' +
+    options.luminosity + '%)';
+  ctx.fillRect(0, 0, c.width, c.height);
+  window.setTimeout(draw, options.delay);
 }
+
+draw();
